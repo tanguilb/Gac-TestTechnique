@@ -22,7 +22,7 @@ class Start extends BaseController
           $file = $this->request->getFile('callFile');
           if ($file->isValid() && !$file->hasMoved() && $file->getExtension() == "csv") {
             if (file_exists('../public/tickets.' . $file->getExtension())) {
-              unlink('../public/tickets.' . $file->getExtension())
+              unlink('../public/tickets.' . $file->getExtension());
             }
             $file->move('../public', 'tickets.' . $file->getExtension());
 

@@ -52,17 +52,11 @@ class SaveData extends BaseController
          'billed_duration'    => $values[6],
          'call_type'          => $values[7]
        ];
-
        $cpt++;
-     } else {
-
-       $cptfail++;
      }
 
      if ($cpt >= 10000) {
        $builder->insertBatch($data);
-       var_dump($cpt);
-       var_dump($cptfail);
        $data = [];
        $cpt = 0;
      }
@@ -82,10 +76,8 @@ class SaveData extends BaseController
       return [];
     }
 
-    $line = $this->cleanLine($line);
     $values = [];
     foreach ($line as $key => $value) {
-      $value = utf8_encode($value);
         switch ($key) {
           case 0:
           case 1:
@@ -117,6 +109,7 @@ class SaveData extends BaseController
             if (!is_string($value)) {
               return [];
             }
+            $value = $this->cleanValue($value);
             $values[] = $value;
           break;
           default:
@@ -126,23 +119,21 @@ class SaveData extends BaseController
    return $values;
  }
 
- private function cleanLine(array $line)
+ private function cleanValue(string $value)
  {
-     $line = implode('|', $line);
-     $line = utf8_encode($line);
-     $line = htmlentities($line, ENT_QUOTES | ENT_HTML5, "UTF-8");
-     $line = str_ireplace('&rsquo;', "'", $line);
-     $line = str_ireplace('&lsquo;', "'", $line);
-     $line = str_ireplace('&ldquo;', '"', $line);
-     $line = str_ireplace('&rdquo;', '"', $line);
-     $line = html_entity_decode($line, ENT_QUOTES | ENT_HTML5);
-     $line = str_ireplace('"', '', $line);
-     $line = str_ireplace("'", '', $line);
-     $line = strtolower($line);
-     $line = strtr($line, static::UNWANTED);
-     $line = explode('|', $line);
+     $value = utf8_encode($value);
+     $value = htmlentities($value, ENT_QUOTES | ENT_HTML5, "UTF-8");
+     $value = str_ireplace('&rsquo;', "'", $value);
+     $value = str_ireplace('&lsquo;', "'", $value);
+     $value = str_ireplace('&ldquo;', '"', $value);
+     $value = str_ireplace('&rdquo;', '"', $value);
+     $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5);
+     $value = str_ireplace('"', '', $value);
+     $value = str_ireplace("'", '', $value);
+     $value = strtolower($value);
+     $value = strtr($value, static::UNWANTED);
 
-     return $line;
+     return $value;
  }
 
 }
